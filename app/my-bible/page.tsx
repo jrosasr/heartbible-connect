@@ -1,5 +1,6 @@
 'use client'
 
+import { Suspense } from 'react'
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -42,7 +43,7 @@ type Reminder = {
   createdAt: Timestamp
 }
 
-export default function RemindersPage() {
+function ReminderContent() {
   const searchParams = useSearchParams()
   const dni = searchParams.get('dni') || ''
   const { toast } = useToast()
@@ -283,5 +284,13 @@ export default function RemindersPage() {
         </TableBody>
       </Table>
     </div>
+  )
+}
+
+export default function RemindersPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ReminderContent />
+    </Suspense>
   )
 }
