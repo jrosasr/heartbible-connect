@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { app } from '@/lib/firebase'
 import { getFirestore, collection, query, where, getDocs, addDoc } from 'firebase/firestore'
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/hooks/use-toast"
 
 export default function Home() {
   const [username, setUsername] = useState('')
