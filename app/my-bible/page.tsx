@@ -18,6 +18,8 @@ export type Reminder = {
   timeOption: 'in-moment' | 'in-5-min' | 'in-10-min' | 'in-30-min' | 'in-60-min'
   dni: string
   createdAt: Timestamp
+  module?: string  // Add this line
+  isPersonal: boolean  // Add this line
 }
 
 function ReminderContent() {
