@@ -6,28 +6,38 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { app } from '@/lib/firebase'
 import { getFirestore, collection, query, where, getDocs, addDoc } from 'firebase/firestore'
 import { useToast } from "@/hooks/use-toast"
+import { Loader2 } from 'lucide-react'
 
 export default function Home() {
-  const [username, setUsername] = useState('')
+  const [documentId, setDocumentId] = useState('')
+  const [country, setCountry] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const { toast } = useToast()
   const db = getFirestore(app)
 
-  const checkAndCreateUser = async (dni: string) => {
+  const countries = [
+    { name: 'Venezuela', value: 've' },
+    { name: 'Uruguay', value: 'uy' },
+    { name: 'Colombia', value: 'co' },
+    { name: 'Chile', value: 'cl' },
+  ]
+
+  const checkAndCreateUser = async (combinedId: string) => {
     const usersRef = collection(db, 'users')
-    const q = query(usersRef, where("dni", "==", dni))
+    const q = query(usersRef, where("combinedId", "==", combinedId))
     const querySnapshot = await getDocs(q)
 
     if (querySnapshot.empty) {
       // User doesn't exist, create new user
-      await addDoc(usersRef, { dni })
+      await addDoc(usersRef, { combinedId, country, documentId })
       toast({
         title: "Nuevo usuario creado",
-        description: "Se ha creado una nueva cuenta con tu cédula.",
+        description: "Se ha creado una nueva cuenta con tu documento de identidad.",
       })
     } else {
       toast({
@@ -39,11 +49,12 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (username.trim()) {
+    if (documentId.trim() && country) {
       setIsLoading(true)
+      const combinedId = `${country}${documentId}`
       try {
-        await checkAndCreateUser(username)
-        router.push(`/my-bible?dni=${encodeURIComponent(username)}`)
+        await checkAndCreateUser(combinedId)
+        router.push(`/my-bible?dni=${encodeURIComponent(combinedId)}`)
       } catch (error) {
         console.error("Error al procesar el inicio de sesión:", error)
         toast({
@@ -62,18 +73,33 @@ export default function Home() {
       <Card className="w-[350px]">
         <CardHeader>
           <CardTitle>Iniciar Sesión</CardTitle>
-          <CardDescription>Ingresa tu cédula para acceder al CRUD de recordatorios.</CardDescription>
+          <CardDescription>Ingresa tu país y documento de identidad para acceder al CRUD de recordatorios.</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent>
-            <div className="items-center gap-4 grid w-full">
+            <div className="flex flex-col space-y-4">
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="username">Cédula</Label>
+                <Label htmlFor="country">País</Label>
+                <Select value={country} onValueChange={setCountry} required>
+                  <SelectTrigger id="country">
+                    <SelectValue placeholder="Selecciona tu país" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {countries.map((country) => (
+                      <SelectItem key={country.value} value={country.value}>
+                        {country.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="documentId">Documento de Identidad</Label>
                 <Input
-                  id="username"
-                  placeholder="Ingresa tu cédula"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  id="documentId"
+                  placeholder="Ingresa tu documento de identidad"
+                  value={documentId}
+                  onChange={(e) => setDocumentId(e.target.value)}
                   required
                   disabled={isLoading}
                 />
@@ -82,7 +108,14 @@ export default function Home() {
           </CardContent>
           <CardFooter>
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Procesando..." : "Ingresar"}
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+                  Procesando...
+                </>
+              ) : (
+                'Ingresar'
+              )}
             </Button>
           </CardFooter>
         </form>

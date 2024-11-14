@@ -158,48 +158,38 @@ function ReminderContent() {
   const totalStories = reminders.length
   const totalVerses = reminders.reduce((sum, reminder) => sum + reminder.verseCount, 0)
   const storiesInMoment = reminders.filter(reminder => reminder.timeOption === 'in-moment').length
-  const averageVersesPerStory = totalStories > 0 ? totalVerses / totalStories : 0
 
   return (
     <div className="mx-auto p-4 container">
       <h1 className="mb-4 font-bold text-2xl">Bienvenido, {dni}</h1>
       <h2 className="mb-4 font-semibold text-xl">Mi Biblia de Corazón</h2>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mb-6">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Historias Conocidas</CardTitle>
-            <Book className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className="flex flex-row justify-between items-center space-y-0 pb-2">
+            <CardTitle className="font-medium text-sm">Historias Conocidas</CardTitle>
+            <Book className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalStories}</div>
+            <div className="font-bold text-2xl">{totalStories}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total de Versículos</CardTitle>
-            <BookOpen className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className="flex flex-row justify-between items-center space-y-0 pb-2">
+            <CardTitle className="font-medium text-sm">Total de Versículos</CardTitle>
+            <BookOpen className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalVerses}</div>
+            <div className="font-bold text-2xl">{totalVerses}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Historias al Momento</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className="flex flex-row justify-between items-center space-y-0 pb-2">
+            <CardTitle className="font-medium text-sm">Historias al Momento</CardTitle>
+            <Clock className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{storiesInMoment}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Promedio de Versículos</CardTitle>
-            <Heart className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{averageVersesPerStory.toFixed(1)}</div>
+            <div className="font-bold text-2xl">{storiesInMoment}</div>
           </CardContent>
         </Card>
       </div>
