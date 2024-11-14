@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import DeleteConfirmationDialog from './DeleteConfirmationDialog'
 import { Reminder } from './page'
-import { format } from "path"
 
 type RemindersTableProps = {
   reminders: Reminder[]
@@ -13,7 +12,7 @@ type RemindersTableProps = {
 }
 
 export default function RemindersTable({ reminders, onEdit, onDelete }: RemindersTableProps) {
-  const timeOptions: Reminder['timeOption'][] = ['in-moment', 'in-5-min', 'in-10-min', 'in-30-min', 'in-60-min']
+  // const timeOptions: Reminder['timeOption'][] = ['in-moment', 'in-5-min', 'in-10-min', 'in-30-min', 'in-60-min']
 
   const timeOptionsSpanish = {
     "in-moment": "Al momento",
