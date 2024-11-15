@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Reminder } from './page'
 import { Loader2 } from 'lucide-react'
+import { Module, MODULES_AVAILABLE, ModuleStory, STORIES_AVAILABLE_FROM_MODULE } from './modules.data'
 
 type ReminderDrawerProps = {
   isOpen: boolean
@@ -26,27 +27,9 @@ type ReminderDrawerProps = {
   reminders: Reminder[]
 }
 
-type ModuleStory = {
-  title: string
-  text: string
-  verseCount: number
-}
+const modules: Module[] = MODULES_AVAILABLE
 
-const modules = [
-  { name: "Módulo 1", value: "modulo-1" },
-  { name: "Módulo 2", value: "modulo-2" },
-]
-
-const moduleStories: Record<string, ModuleStory[]> = {
-  "modulo-1": [
-    { title: "Jesús calma la tormenta", text: "Marcos 4:32-45", verseCount: 14 },
-    // Add more stories for Module 1 here
-  ],
-  "modulo-2": [
-    { title: "El hijo prodigo", text: "Lucas 15:11-32", verseCount: 22 },
-    // Add stories for Module 2 here
-  ]
-}
+const moduleStories: Record<string, ModuleStory[]> = STORIES_AVAILABLE_FROM_MODULE
 
 export default function ReminderDrawer({ isOpen, setIsOpen, onAdd, onUpdate, editingId, reminders }: ReminderDrawerProps) {
   const [newReminder, setNewReminder] = useState<Omit<Reminder, 'id' | 'dni' | 'createdAt'>>({
@@ -145,7 +128,9 @@ export default function ReminderDrawer({ isOpen, setIsOpen, onAdd, onUpdate, edi
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger asChild>
-        <Button className="mb-4">Agregar Historia</Button>
+        <div className='flex justify-end my-4'>
+          <Button className="mb-4">Agregar Historia</Button>
+        </div>
       </DrawerTrigger>
       <DrawerContent>
         <div className="flex flex-col h-full max-h-[90vh]">
