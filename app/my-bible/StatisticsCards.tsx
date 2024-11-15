@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Book, BookOpen, Clock } from "lucide-react"
+import { Book, BookOpen, } from "lucide-react"
 import { Reminder } from './page'
 import { useState, useEffect } from "react"
 
