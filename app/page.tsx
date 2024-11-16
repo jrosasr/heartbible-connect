@@ -67,11 +67,6 @@ export default function Home() {
     }
   }
 
-  const handleDocumentIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, '')
-    setDocumentId(value)
-  }
-
   return (
     <div className="flex justify-center items-center mx-auto min-h-screen container">
       <Card className="w-[350px]">
