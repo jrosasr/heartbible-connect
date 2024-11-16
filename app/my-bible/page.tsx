@@ -14,6 +14,7 @@ import RemindersTable from './RemindersTable'
 
 export type Reminder = {
   id: string
+  slug: string
   title: string
   text: string
   verseCount: number

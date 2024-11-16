@@ -28,7 +28,6 @@ type ReminderDrawerProps = {
 }
 
 const modules: Module[] = MODULES_AVAILABLE
-
 const moduleStories: Record<string, ModuleStory[]> = STORIES_AVAILABLE_FROM_MODULE
 
 export default function ReminderDrawer({ isOpen, setIsOpen, onAdd, onUpdate, editingId, reminders }: ReminderDrawerProps) {
@@ -39,6 +38,7 @@ export default function ReminderDrawer({ isOpen, setIsOpen, onAdd, onUpdate, edi
     timeOption: 'in-moment',
     module: '',
     isPersonal: true,
+    slug: ''
   })
   const [errors, setErrors] = useState<{[key: string]: string}>({})
   const [isLoading, setIsLoading] = useState(false)
@@ -51,15 +51,36 @@ export default function ReminderDrawer({ isOpen, setIsOpen, onAdd, onUpdate, edi
         setNewReminder({ ...reminderToEdit })
       }
     } else {
-      setNewReminder({ title: '', text: '', verseCount: 1, timeOption: 'in-moment', module: '', isPersonal: true })
+      setNewReminder({ title: '', text: '', verseCount: 1, timeOption: 'in-moment', module: '', isPersonal: true, slug: '' })
     }
   }, [editingId, reminders])
 
+  const generateSlug = (title: string, text: string) => {
+    const combinedText = `${title} ${text}`
+    return combinedText
+      .toLowerCase()
+      .replace(/[^\w ]+/g, '')
+      .replace(/ +/g, '-')
+      .slice(0, 100) // Limit slug length to 100 characters
+  }
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setNewReminder({
-      ...newReminder,
-      [name]: name === 'verseCount' ? parseInt(value) || 0 : value
+    setNewReminder(prev => {
+      const updatedReminder = {
+        ...prev,
+        [name]: name === 'verseCount' ? parseInt(value) || 0 : value
+      }
+      
+      // Generate slug when title or text changes
+      if (name === 'title' || name === 'text') {
+        updatedReminder.slug = generateSlug(
+          name === 'title' ? value : prev.title,
+          name === 'text' ? value : prev.text
+        )
+      }
+      
+      return updatedReminder
     })
     setErrors({ ...errors, [name]: '' })
   }
@@ -70,7 +91,7 @@ export default function ReminderDrawer({ isOpen, setIsOpen, onAdd, onUpdate, edi
 
     if (name === 'module') {
       setSelectedModule(value)
-      setNewReminder(prev => ({ ...prev, title: '', text: '', verseCount: 1 }))
+      setNewReminder(prev => ({ ...prev, title: '', text: '', verseCount: 1, slug: '' }))
     }
   }
 
@@ -79,7 +100,8 @@ export default function ReminderDrawer({ isOpen, setIsOpen, onAdd, onUpdate, edi
       ...prev,
       title: story.title,
       text: story.text,
-      verseCount: story.verseCount
+      verseCount: story.verseCount,
+      slug: generateSlug(story.title, story.text)
     }))
   }
 
@@ -89,6 +111,8 @@ export default function ReminderDrawer({ isOpen, setIsOpen, onAdd, onUpdate, edi
       if (!newReminder.title.trim()) newErrors.title = 'El título es requerido'
       if (!newReminder.text.trim()) newErrors.text = 'El texto es requerido'
       if (newReminder.verseCount < 1) newErrors.verseCount = 'La cantidad de versículos debe ser al menos 1'
+      if (!newReminder.slug.trim()) newErrors.slug = 'El slug es requerido'
+      if (reminders.some(r => r.slug === newReminder.slug && r.id !== editingId)) newErrors.slug = 'Este slug ya está en uso'
     } else {
       if (!newReminder.module) newErrors.module = 'Debe seleccionar un módulo'
       if (!newReminder.title) newErrors.story = 'Debe seleccionar una historia'
@@ -106,7 +130,7 @@ export default function ReminderDrawer({ isOpen, setIsOpen, onAdd, onUpdate, edi
       } else {
         await onUpdate({ ...newReminder, id: editingId })
       }
-      setNewReminder({ title: '', text: '', verseCount: 1, timeOption: 'in-moment', module: '', isPersonal: true })
+      setNewReminder({ title: '', text: '', verseCount: 1, timeOption: 'in-moment', module: '', isPersonal: true, slug: '' })
       setIsOpen(false)
     } catch (error) {
       console.error("Error submitting reminder:", error)

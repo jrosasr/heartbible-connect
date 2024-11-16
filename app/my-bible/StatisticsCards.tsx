@@ -8,16 +8,18 @@ type StatisticsCardsProps = {
 }
 
 export default function StatisticsCards({ reminders }: StatisticsCardsProps) {
-  const totalStories = reminders.length
-  const totalVerses = reminders.reduce((sum, reminder) => sum + reminder.verseCount, 0)
+  const uniqueStories = reminders.filter((reminder, index, self) => self.findIndex((r) => r.slug === reminder.slug) === index)
+  
+  const totalStories = uniqueStories.length
+  const totalVerses = uniqueStories.reduce((sum, reminder) => sum + reminder.verseCount, 0)
 
   const [progress1, setProgress1] = useState(0)
   const [progress2, setProgress2] = useState(0)
   const [progress3, setProgress3] = useState(0)
 
-  const module1Stories = reminders.filter(reminder => reminder.module === 'modulo-1').length
-  const module2Stories = reminders.filter(reminder => reminder.module === 'modulo-2').length
-  const module3Stories = reminders.filter(reminder => reminder.module === 'modulo-3').length
+  const module1Stories = uniqueStories.filter(reminder => reminder.module === 'modulo-1').length
+  const module2Stories = uniqueStories.filter(reminder => reminder.module === 'modulo-2').length
+  const module3Stories = uniqueStories.filter(reminder => reminder.module === 'modulo-3').length
 
   const totalModule1Stories = 6 // Assuming there are 6 stories in Module 1
   const totalModule2Stories = 0 // Assuming there are 6 stories in Module 2
