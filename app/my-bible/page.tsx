@@ -2,10 +2,12 @@
 
 import { Suspense } from 'react'
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { app } from '@/lib/firebase'
 import { getFirestore, collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, Timestamp } from 'firebase/firestore'
 import { useToast } from "@/hooks/use-toast"
+import { Button } from "@/components/ui/button"
 import StatisticsCards from './StatisticsCards'
 import ReminderDrawer from './ReminderDrawer'
 import RemindersTable from './RemindersTable'
@@ -18,8 +20,26 @@ export type Reminder = {
   timeOption: 'in-moment' | 'in-5-min' | 'in-10-min' | 'in-30-min' | 'in-60-min'
   dni: string
   createdAt: Timestamp
-  module?: string  // Add this line
-  isPersonal: boolean  // Add this line
+  module?: string
+  isPersonal: boolean
+}
+
+function Header() {
+  const router = useRouter()
+
+  const handleLogout = () => {
+    router.push('/')
+  }
+
+  return (
+    <header className="flex justify-between items-center bg-[#dbe1d1] px-6 py-4 text-primary-foreground">
+      <div className="flex items-center">
+        <Image src="/images/icons/icon-512x512.png" alt="Logo" width={40} height={40} />
+        <h1 className="ml-4 font-bold text-2xl"></h1>
+      </div>
+      <Button onClick={handleLogout} variant="link">Salir</Button>
+    </header>
+  )
 }
 
 function ReminderContent() {
@@ -97,8 +117,7 @@ function ReminderContent() {
 
   return (
     <div className="mx-auto p-4 container">
-      <h1 className="mb-4 font-bold text-2xl">Bienvenido, {dni}</h1>
-      <h2 className="mb-4 font-semibold text-xl">Mi Biblia de Corazón</h2>
+      <h2 className="mb-4 font-semibold text-xl">Bienvenido, {dni}</h2>
       
       <StatisticsCards reminders={reminders} />
       
@@ -122,8 +141,11 @@ function ReminderContent() {
 
 export default function RemindersPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <ReminderContent />
-    </Suspense>
+    <>
+      <Header />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ReminderContent />
+      </Suspense>
+    </>
   )
 }

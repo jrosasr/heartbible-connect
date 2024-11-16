@@ -33,7 +33,6 @@ export default function Home() {
     const querySnapshot = await getDocs(q)
 
     if (querySnapshot.empty) {
-      // User doesn't exist, create new user
       await addDoc(usersRef, { combinedId, country, documentId })
       toast({
         title: "Nuevo usuario creado",
@@ -68,6 +67,11 @@ export default function Home() {
     }
   }
 
+  const handleDocumentIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '')
+    setDocumentId(value)
+  }
+
   return (
     <div className="flex justify-center items-center mx-auto min-h-screen container">
       <Card className="w-[350px]">
@@ -99,9 +103,12 @@ export default function Home() {
                   id="documentId"
                   placeholder="Ingresa tu documento de identidad"
                   value={documentId}
-                  onChange={(e) => setDocumentId(e.target.value)}
+                  onChange={(e) => setDocumentId(e.target.value.replace(/\D/g, ''))}
                   required
                   disabled={isLoading}
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                 />
               </div>
             </div>
