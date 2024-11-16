@@ -13,17 +13,21 @@ export default function StatisticsCards({ reminders }: StatisticsCardsProps) {
 
   const [progress1, setProgress1] = useState(0)
   const [progress2, setProgress2] = useState(0)
+  const [progress3, setProgress3] = useState(0)
 
   const module1Stories = reminders.filter(reminder => reminder.module === 'modulo-1').length
   const module2Stories = reminders.filter(reminder => reminder.module === 'modulo-2').length
+  const module3Stories = reminders.filter(reminder => reminder.module === 'modulo-3').length
 
   const totalModule1Stories = 6 // Assuming there are 6 stories in Module 1
-  const totalModule2Stories = 22 // Assuming there are 6 stories in Module 2
+  const totalModule2Stories = 0 // Assuming there are 6 stories in Module 2
+  const totalModule3Stories = 22 // Assuming there are 6 stories in Module 2
 
   useEffect(() => {
     setProgress1((module1Stories / totalModule1Stories) * 100)
     setProgress2((module2Stories / totalModule2Stories) * 100)
-  }, [module1Stories, module2Stories])
+    setProgress3((module3Stories / totalModule3Stories) * 100)
+  }, [module1Stories, module2Stories, module3Stories])
 
 
   return (
@@ -70,6 +74,19 @@ export default function StatisticsCards({ reminders }: StatisticsCardsProps) {
             <p className="text-muted-foreground text-xs">Historias conocidas</p>
           </div>
           <CircularProgress progress={progress2} />
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="flex flex-row justify-between items-center space-y-0 pb-2">
+          <CardTitle className="font-medium text-sm">Módulo 3</CardTitle>
+          <BookOpen className="w-4 h-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent className="flex justify-between items-center">
+          <div>
+            <div className="font-bold text-2xl">{module3Stories}/{totalModule3Stories}</div>
+            <p className="text-muted-foreground text-xs">Historias conocidas</p>
+          </div>
+          <CircularProgress progress={progress3} />
         </CardContent>
       </Card>
     </div>
