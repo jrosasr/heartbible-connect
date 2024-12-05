@@ -110,12 +110,12 @@ export const STORIES_AVAILABLE_FROM_MODULE: Record<string, ModuleStory[]> = {
       verseCount: 6,
     },
     {
-      title: "Nacimiento de Jesús",
+      title: "Nacimiento de Jesús - Mt",
       text: "Mateo 1:18-25",
       verseCount: 7,
     },
     {
-      title: "Nacimiento de Jesús",
+      title: "Nacimiento de Jesús - Lc",
       text: "Lucas 2:4-20",
       verseCount: 16,
     },
